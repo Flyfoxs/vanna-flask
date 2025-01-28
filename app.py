@@ -23,6 +23,7 @@ cache = MemoryCache()
 # vn = LocalContext_OpenAI()
 QDRANT_HOST = "qdrant.databases.svc.cluster.local"
 BEDROCK_MODEL_ID = "meta.llama3-70b-instruct-v1:0"
+BEDROCK_MODEL_ID = "anthropic.claude-3-5-sonnet-20240620-v1:0"
 qdrant_client = QdrantClient(host=QDRANT_HOST, port=6333)
 bedrock_client = boto3.client(service_name='bedrock-runtime')
 import pandas as pd
@@ -46,6 +47,7 @@ conn = trino.dbapi.connect(
     port=8080,
     user="hive",
     catalog="hive",
+    schema="660b77afff601db452eec3c0",
     isolation_level=transaction.IsolationLevel.REPEATABLE_READ,
 )
 
@@ -102,7 +104,7 @@ def generate_sql():
         return jsonify({"type": "error", "error": "No question provided"})
 
     id = cache.generate_id(question=question)
-    sql = vn.generate_sql(question=question)
+    sql = vn.generate_sql(question=question, allow_llm_to_see_data=True)
 
     cache.set(id=id, field='question', value=question)
     cache.set(id=id, field='sql', value=sql)

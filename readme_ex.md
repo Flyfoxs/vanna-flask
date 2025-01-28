@@ -7,3 +7,5 @@ cd /workspace/vanna-flask-main
 python app.py
 
 k port-forward chatubix-api-69767cf5c4-vpttw  5000:5001 -n data-tooling
+
+k port-forward svc/chatubix-api  5001:5001 -n data-tooling
